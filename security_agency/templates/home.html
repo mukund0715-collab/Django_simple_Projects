@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    /* Security Theme Colors */
+    body {
+        background: #f8f9fa;
+    }
+    h1, h2 {
+        font-weight: 700;
+        color: #1f2937;
+    }
+    .lead {
+        color: #4b5563;
+    }
+
+    /* Banner Animation */
+    .banner {
+        animation: fadeInDown 1.2s ease-in-out;
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Card Hover Animation */
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 12px;
+    }
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Image Zoom Effect */
+    .card-img-top {
+        transition: transform 0.4s ease;
+    }
+    .card:hover .card-img-top {
+        transform: scale(1.1);
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background-color: #1e40af;
+        border: none;
+        transition: background-color 0.3s ease;
+    }
+    .btn-primary:hover {
+        background-color: #1d4ed8;
+    }
+    .btn-outline-primary {
+        border-color: #1e40af;
+        color: #1e40af;
+    }
+    .btn-outline-primary:hover {
+        background-color: #1e40af;
+        color: #fff;
+    }
+</style>
+
+<!-- Banner Section -->
+<div class="text-center mb-5 banner">
+    <h1 class="mb-3">Welcome to Our Security Agency</h1>
+    <p class="lead mb-4">Reliable and professional security services for homes, businesses, and events.</p>
+    <img src="https://via.placeholder.com/900x300" class="img-fluid rounded shadow" alt="Security Banner">
+</div>
+
+<!-- Featured Guards -->
+<h2 class="text-center mb-4">Meet Our Top Guards</h2>
+<div class="row">
+    {% for guard in featured_guards %}
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-lg">
+            <img src="{{ guard.photo.url }}" class="card-img-top" style="height:250px; object-fit:cover;" alt="{{ guard.name }}">
+            <div class="card-body text-center">
+                <h5 class="card-title">{{ guard.name }}</h5>
+                <p class="text-muted">{{ guard.experience }} years experience</p>
+                <a href="{% url 'guard_detail' guard.id %}" class="btn btn-primary btn-sm">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-center">No guards available yet.</p>
+    {% endfor %}
+</div>
+
+<div class="text-center mt-4">
+    <a href="/guards/" class="btn btn-outline-primary btn-lg">View All Guards</a>
+</div>
+{% endblock %}

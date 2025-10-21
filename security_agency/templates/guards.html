@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    h2 {
+        text-align: center;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 30px;
+        animation: fadeInDown 1s ease-in-out;
+    }
+    h3 {
+        font-weight: 600;
+        color: #374151;
+        margin: 40px 0 20px;
+        border-left: 5px solid #1e40af;
+        padding-left: 10px;
+    }
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        border-radius: 12px;
+        overflow: hidden;
+        height: 470px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    }
+    .card-img-top {
+        height: 280px;
+        object-fit: cover;
+        transition: transform 0.4s ease;
+    }
+    .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .card-body { padding: 15px; }
+    .btn-primary {
+        background-color: #1e40af;
+        border: none;
+        transition: background-color 0.3s ease;
+        font-weight: 600;
+    }
+    .btn-primary:hover { background-color: #1d4ed8; }
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s forwards;
+    }
+    @keyframes fadeInUp {
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden-guard { display: none; }
+    .show-more-btn {
+        display: block;
+        margin: 20px auto;
+        background: #1e40af;
+        color: white;
+        border: none;
+        padding: 8px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    .show-more-btn:hover { background: #1d4ed8; }
+</style>
+
+<h2>Our Security Guards</h2>
+
+<!-- Corporate Security -->
+<h3>Corporate Security</h3>
+<div class="row justify-content-center" id="corporate-section">
+    {% for guard in guards %}
+        {% if guard.category == 'corporate' %}
+        <div class="col-md-3 col-sm-6 mb-4 fade-in {% if forloop.counter > 4 %}hidden-guard{% endif %}">
+            <div class="card shadow-lg">
+                <img src="{{ guard.photo.url }}" class="card-img-top" alt="{{ guard.name }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ guard.name }}</h5>
+                    <p class="text-muted mb-1">Experience: {{ guard.experience }} years</p>
+                    <p class="text-secondary mb-1">Skills: {{ guard.skills }}</p>
+                    <p class="fw-bold text-success">Salary: ₹{{ guard.salary }}</p>
+                    <a href="{% url 'guard_detail' guard.id %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<button class="show-more-btn" onclick="toggleGuards('corporate-section', this)">Show More</button>
+
+<!-- Residential Security -->
+<h3>Residential Security</h3>
+<div class="row justify-content-center" id="residential-section">
+    {% for guard in guards %}
+        {% if guard.category == 'residential' %}
+        <div class="col-md-3 col-sm-6 mb-4 fade-in {% if forloop.counter > 4 %}hidden-guard{% endif %}">
+            <div class="card shadow-lg">
+                <img src="{{ guard.photo.url }}" class="card-img-top" alt="{{ guard.name }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ guard.name }}</h5>
+                    <p class="text-muted mb-1">Experience: {{ guard.experience }} years</p>
+                    <p class="text-secondary mb-1">Skills: {{ guard.skills }}</p>
+                    <p class="fw-bold text-success">Salary: ₹{{ guard.salary }}</p>
+                    <a href="{% url 'guard_detail' guard.id %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<button class="show-more-btn" onclick="toggleGuards('residential-section', this)">Show More</button>
+
+<!-- Event Security -->
+<h3>Event Security</h3>
+<div class="row justify-content-center" id="event-section">
+    {% for guard in guards %}
+        {% if guard.category == 'event' %}
+        <div class="col-md-3 col-sm-6 mb-4 fade-in {% if forloop.counter > 4 %}hidden-guard{% endif %}">
+            <div class="card shadow-lg">
+                <img src="{{ guard.photo.url }}" class="card-img-top" alt="{{ guard.name }}">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ guard.name }}</h5>
+                    <p class="text-muted mb-1">Experience: {{ guard.experience }} years</p>
+                    <p class="text-secondary mb-1">Skills: {{ guard.skills }}</p>
+                    <p class="fw-bold text-success">Salary: ₹{{ guard.salary }}</p>
+                    <a href="{% url 'guard_detail' guard.id %}" class="btn btn-primary btn-sm w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+<button class="show-more-btn" onclick="toggleGuards('event-section', this)">Show More</button>
+
+<script>
+function toggleGuards(sectionId, btn) {
+    const section = document.getElementById(sectionId);
+    const hiddenCards = section.querySelectorAll('.hidden-guard');
+    hiddenCards.forEach(card => {
+        card.style.display = (card.style.display === "none" || card.style.display === "") ? "block" : "none";
+    });
+    btn.textContent = btn.textContent === "Show More" ? "Show Less" : "Show More";
+}
+</script>
+
+{% endblock %}

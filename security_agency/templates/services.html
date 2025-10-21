@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% block content %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<h2 class="mb-5 text-center fw-bold">Our Security Services</h2>
+
+<div class="row">
+    <!-- Residential Security -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-lg border-0 h-100">
+            <img src="https://images.unsplash.com/photo-1587560699334-cc4ff634989e" 
+                 class="card-img-top" alt="Residential Security">
+            <div class="card-body text-center">
+                <i class="fas fa-home fa-3x text-primary mb-3"></i>
+                <h5 class="card-title fw-bold">Residential Security</h5>
+                <p class="card-text">
+                    Keep your home and family safe with professional guards, CCTV monitoring, 
+                    and 24/7 surveillance. Our team ensures that unauthorized access and risks 
+                    are eliminated before they occur.  
+                </p>
+                <ul class="list-unstyled text-start small">
+                    <li>✔ 24/7 trained guards</li>
+                    <li>✔ CCTV & alarm integration</li>
+                    <li>✔ Emergency response support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Corporate Security -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-lg border-0 h-100">
+            <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427" 
+                 class="card-img-top" alt="Corporate Security">
+            <div class="card-body text-center">
+                <i class="fas fa-building fa-3x text-success mb-3"></i>
+                <h5 class="card-title fw-bold">Corporate Security</h5>
+                <p class="card-text">
+                    Safeguard your offices, employees, and business assets with our highly 
+                    trained corporate security personnel. We specialize in risk assessment, 
+                    visitor management, and incident prevention.  
+                </p>
+                <ul class="list-unstyled text-start small">
+                    <li>✔ Access control systems</li>
+                    <li>✔ Professional uniformed guards</li>
+                    <li>✔ Fire & hazard safety management</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Security -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-lg border-0 h-100">
+            <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d" 
+                 class="card-img-top" alt="Event Security">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x text-danger mb-3"></i>
+                <h5 class="card-title fw-bold">Event Security</h5>
+                <p class="card-text">
+                    Ensure the safety of your guests and smooth execution of your events 
+                    with our expert event security team. From crowd control to VIP protection, 
+                    we cover it all.  
+                </p>
+                <ul class="list-unstyled text-start small">
+                    <li>✔ Crowd management</li>
+                    <li>✔ VIP & celebrity protection</li>
+                    <li>✔ Emergency evacuation planning</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 15px;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+}
+.card-title {
+    transition: color 0.3s;
+}
+.card:hover .card-title {
+    color: #007bff;
+}
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+}
+</style>
+{% endblock %}

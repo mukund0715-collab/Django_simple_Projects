@@ -1,0 +1,24 @@
+[
+    {
+        "model": "main.guard",
+        "pk": 1,
+        "fields": {
+            "name": "John Smith",
+            "photo": "guards/john.jpg",
+            "experience": 5,
+            "skills": "Patrolling, CCTV Monitoring, First Aid",
+            "contact_number": "+91-9876543210"
+        }
+    },
+    {
+        "model": "main.guard",
+        "pk": 2,
+        "fields": {
+            "name": "Ravi Kumar",
+            "photo": "guards/ravi.jpg",
+            "experience": 3,
+            "skills": "Event Security, Bodyguard Services",
+            "contact_number": "+91-9876501234"
+        }
+    }
+]
