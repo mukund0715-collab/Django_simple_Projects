@@ -72,10 +72,6 @@ This repository is primarily a personal portfolio, but I'm always open to feedba
 
 ---
 
-## 📄 License
-
-This repository is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details. *(You should create a separate `LICENSE` file in your repository)*.
-
 ---
 
 ## 📬 Connect with Me
