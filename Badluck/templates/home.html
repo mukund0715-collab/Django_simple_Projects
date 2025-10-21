@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://kit.fontawesome.com/YOUR_KIT_CODE.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.10/lottie.min.js"></script>
+
+
+<div class="container animate__animated animate__fadeIn">
+    <div class="text-center my-5">
+        <h1 class="display-4 font-weight-bold">Welcome to <span class="text-success">ALGODI</span></h1>
+        <p class="lead">Smarter trading through intelligent algorithms and data-driven decisions.</p>
+    </div>
+
+    <br>
+    <!-- Load LottieFiles script -->
+<script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<!-- Exness Promo Section -->
+
+
+<!-- Animated Robot & Person -->
+<div class="container mt-5 text-center">
+        <!-- Description -->
+
+<div class="text-center my-5">
+    <img src="static/Robo.jpeg" alt="Robot explaining to person" style="max-width: 100%; height: auto; max-height: 800px;">
+</div>
+  <div style="max-width: 600px; margin: 1rem auto; padding: 1rem;">
+  <h4 class="fw-semibold">What is Algorithmic Trading Software?</h4>
+  <p>
+    Algorithmic trading software enhances and automates trading capabilities for trading financial instruments
+    such as equities, securities, digital assets, currency, and more. Algorithmic trading software, also
+    known as algo trading software or automated trading software, enables the automatic execution of trades
+    depending on occurrences of specified criteria, indicators, and movements by connecting with a broker or
+    exchange.
+  </p>
+
+</div>
+    <!-- Button -->
+    <div class="my-3">
+        <a href="{% url 'demo_register' %}" class="btn btn-warning fw-bold px-4 py-2">REGISTER</a>
+    </div>
+</div>
+<br><br>
+    <!-- How it Works Section -->
+<div class="row mb-5 justify-content-center text-center">
+    <div class="col-lg-10">
+        <h2 class="mb-4"><i class="fas fa-cogs text-primary"></i>How it Works!!!</h2>
+        <p>Our algorithms combine advanced technical indicators and machine learning techniques to analyze trends and provide actionable trading signals.</p>
+        <div class="row justify-content-center text-center">
+    <div class="col-md-4">
+        <!-- Real-Time Data Card -->
+        <div class="card border-0 shadow-sm mb-4" role="button" data-bs-toggle="modal" data-bs-target="#realTimeDataModal">
+            <div class="card-body">
+                <i class="fas fa-bolt fa-2x text-warning mb-3"></i>
+                <h5>Real-Time Data</h5>
+                <p>Instant updates from global markets to ensure you never miss a signal.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Risk Management Card -->
+        <div class="card border-0 shadow-sm mb-4" role="button" data-bs-toggle="modal" data-bs-target="#riskManagementModal">
+            <div class="card-body">
+                <i class="fas fa-shield-alt fa-2x text-danger mb-3"></i>
+                <h5>Risk Management</h5>
+                <p>Minimize losses with built-in risk control and position sizing strategies.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Custom Parameters Card -->
+        <div class="card border-0 shadow-sm mb-4" role="button" data-bs-toggle="modal" data-bs-target="#customParamsModal">
+            <div class="card-body">
+                <i class="fas fa-sliders-h fa-2x text-info mb-3"></i>
+                <h5>Custom Parameters</h5>
+                <p>Tailor algorithms to suit your trading style and portfolio goals.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+    <!-- Benefits Section -->
+<!-- BENEFITS SECTION - CLEAN AND RESPONSIVE -->
+<style>
+    .benefit-icon {
+        transition: transform 0.3s ease;
+    }
+    .benefit-card:hover .benefit-icon {
+        transform: scale(1.2) rotate(5deg);
+    }
+</style>
+
+<div class="container my-5">
+    <div class="text-center mb-5">
+        <h2 class="animate__animated animate__fadeInDown">
+            <i class="fas fa-star text-warning animate__animated animate__pulse animate__infinite"></i>
+            Why Choose <span class="text-success">ALGODI</span>
+        </h2>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-2 g-4">
+
+        <div class="col">
+            <div class="card benefit-card border-0 shadow-sm animate__animated animate__zoomIn h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-microscope fa-2x text-primary benefit-icon fa-bounce"></i>
+                    <h5 class="mt-3">Rigorously Tested</h5>
+                    <p>Highly reliable system with no software required at the customer’s end.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card benefit-card border-0 shadow-sm animate__animated animate__zoomIn h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-robot fa-2x text-success benefit-icon fa-beat"></i>
+                    <h5 class="mt-3">Increased Efficiency</h5>
+                    <p>Automated tools eliminate human error and streamline trading processes.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card benefit-card border-0 shadow-sm animate__animated animate__zoomIn h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-2x text-info benefit-icon fa-spin"></i>
+                    <h5 class="mt-3">Time Saving</h5>
+                    <p>Use of automation ensures quick execution and faster responses.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card benefit-card border-0 shadow-sm animate__animated animate__zoomIn h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-eye fa-2x text-danger benefit-icon fa-fade"></i>
+                    <h5 class="mt-3">Managed Risks</h5>
+                    <p>Customer accounts are continuously monitored to manage and mitigate risk.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card benefit-card border-0 shadow-sm animate__animated animate__zoomIn h-100 text-center">
+                <div class="card-body">
+                    <i class="fas fa-layer-group fa-2x text-warning benefit-icon fa-bounce"></i>
+                    <h5 class="mt-3">One Step Solution</h5>
+                    <p>A complete trading and investment solution, all in one place.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/918197890502" target="_blank" rel="noopener" class="whatsapp-float">
+    <i class="fab fa-whatsapp"></i>
+</a>
+<div class="container my-5 text-center">
+    <h3 class="fw-bold">CREATE YOUR OWN <span style="color:#1E90FF;">TRADING</span> <span style="color:#FF6347;">ACCOUNT</span></h3>
+
+    <div class="my-4">
+        <img src="{'static/exness.jpg'}" alt="Exness Promo" style="max-width: 300px; width: 100%; height: auto;">
+    </div>
+
+    <a href="https://one.exnesstrack.org/a/mpt9tjpc8z/" target="_blank" class="btn btn-lg fw-bold text-white" style="background: linear-gradient(to right, #6a11cb, #2575fc); padding: 12px 32px; border-radius: 50px;">
+        CREATE NOW
+    </a>
+</div>
+<style>
+.whatsapp-float {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 30px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.whatsapp-float:hover {
+    background-color: #128c4a;
+    text-decoration: none;
+    color: white;
+}
+</style>
+<style>
+  .animation-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #f0f0f0;
+    overflow: hidden;
+  }
+
+  .animation {
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 100%;
+  }
+
+  #robot-animation {
+    left: 10%;
+  }
+
+  #person-animation {
+    left: 60%;
+  }
+</style>
+
+{% endblock %}

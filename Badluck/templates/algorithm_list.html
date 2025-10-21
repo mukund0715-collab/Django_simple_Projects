@@ -1,0 +1,11 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Algorithm List</h1>
+  <ul>
+    {% for algorithm in algorithms %}
+      <li>{{ algorithm.name }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

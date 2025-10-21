@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  /* Make all text readable */
+  .container, .card-body, .card-title, .form-label, label, h1, h2, h5, p, li, select, option {
+    color: #ffffff !important;
+  }
+
+  /* Optional: Glass-like effect for cards */
+  .card {
+    background-color: rgba(0, 0, 0, 0.55) !important;
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* White text inside modal triggers */
+  .card-body i,
+  .card-body h5,
+  .card-body p {
+    color: #ffffff !important;
+  }
+
+  /* White dropdown */
+  .form-select {
+    background-color: #000;
+    color: #fff;
+    border: 1px solid #666;
+  }
+
+  .form-select option {
+    background: #111;
+    color: #fff;
+  }
+
+  /* List items */
+  .list-group-item {
+    background: transparent;
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+</style>
+
+<style>
+  #candlestick-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -2;
+    width: 100vw;
+    height: 100vh;
+    background: #0d0d0d;
+  }
+
+  .dark-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+  }
+</style>
+
+<canvas id="candlestick-bg"></canvas>
+<div class="dark-overlay"></div>
+<script>
+  const canvas = document.getElementById('candlestick-bg');
+  const ctx = canvas.getContext('2d');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+
+  class Candle {
+    constructor(x) {
+      this.x = x;
+      this.reset();
+    }
+
+    reset() {
+      this.y = Math.random() * canvas.height;
+      this.wickHeight = Math.random() * 40 + 10;
+      this.bodyHeight = Math.random() * 40 + 10;
+      this.bodyWidth = 6;
+      this.color = Math.random() > 0.5 ? "#00ff7f" : "#ff4040"; // green/red
+      this.speed = Math.random() * 0.5 + 0.2;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 1;
+      ctx.moveTo(this.x, this.y - this.wickHeight);
+      ctx.lineTo(this.x, this.y + this.bodyHeight);
+      ctx.stroke();
+
+      ctx.fillStyle = this.color;
+      ctx.fillRect(this.x - this.bodyWidth / 2, this.y, this.bodyWidth, this.bodyHeight);
+    }
+
+    update() {
+      this.x -= this.speed;
+      if (this.x < -10) {
+        this.x = canvas.width + Math.random() * 100;
+        this.reset();
+      }
+      this.draw();
+    }
+  }
+
+  const candles = [];
+  for (let i = 0; i < 200; i++) {
+    candles.push(new Candle(Math.random() * canvas.width));
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let candle of candles) {
+      candle.update();
+    }
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
+  <h1>Algorithm List</h1>
+  <ul>
+    {% for algorithm in algorithms %}
+      <li>{{ algorithm.name }}</li>
+    {% endfor %}
+  </ul>
+
+
+
+
+
+
+{% endblock %}
