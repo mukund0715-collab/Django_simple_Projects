@@ -12,7 +12,10 @@ Below is a list of the projects currently available in this repository.
 
 | Project Name | Status | Description | Key Features/Technologies | Link to Directory |
 | :--- | :--- | :--- | :--- | :--- |
-| **Badluck** | ✅ **Completed** | I created this because one of my friend who does trading needed it | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | [Link to Project 1](./Badluck) |
+| **Badluck** | ✅ **Completed** | Enjoyed creating a website for my friend | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | 
+[Link to Project 1](./Badluck) |
+| **Blood Bank Management** | ✅ **Completed** | Just a simple Bloodbank management website | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | 
+[Link to Project 2](./bloodbankmanagement_master) |
 | *... more to come!* | | | | |
 
 * **Note:** Click on the **Link to Directory** for specific installation, configuration, and usage instructions for each project.
