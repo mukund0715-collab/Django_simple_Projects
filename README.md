@@ -12,12 +12,10 @@ Below is a list of the projects currently available in this repository.
 
 | Project Name | Status | Description | Key Features/Technologies | Link to Directory |
 | :--- | :--- | :--- | :--- | :--- |
-| **Badluck** | ✅ **Completed** | Enjoyed creating a website for my friend | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | 
-[Link to Project 1](./Badluck) |
-| **Blood Bank Management** | ✅ **Completed** | Just a simple Bloodbank management website | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | 
-[Link to Project 2](./bloodbankmanagement_master) |
-| **Security_agency** | ✅ **Completed** | A website to manage security guards | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | 
-[Link to Project 3](./security_agency)|
+| **Badluck** | ✅ **Completed** | Enjoyed creating a website for my friend | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | [Link to Project 1](./Badluck) |
+| **Blood Bank Management** | ✅ **Completed** | Just a simple Bloodbank management website | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | [Link to Project 2](./bloodbankmanagement_master) |
+| **Security_agency** | ✅ **Completed** | A website to manage security guards | Django REST Framework, PostgreSQL, Docker, Bootstrap, etc. | [Link to Project 3](./security_agency) |
+| **FoodCart** | ✅ **Completed** | A real-time GPS tracking and social ordering platform for mobile street food vendors | Django, Leaflet.js (Live Maps), Bootstrap 5, SQLite/PostgreSQL | [Link to FoodCart](./FoodCart) |
 | *... more to come!* | | | | |
 
 * **Note:** Click on the **Link to Directory** for specific installation, configuration, and usage instructions for each project.
@@ -72,10 +70,5 @@ This repository is primarily a personal portfolio, but I'm always open to feedba
 
 ---
 
----
-
 ## 📬 Connect with Me
-
-* **Portfolio/Website:** [Your Personal Website URL]
-* **LinkedIn:** [Your LinkedIn Profile URL]
-* **Twitter/X (Optional):** [Your Social Media URL]
+* **LinkedIn:** [www.linkedin.com/in/mukund-gumathannavar-46ab52363](https://www.linkedin.com/in/mukund-gumathannavar-46ab52363)
