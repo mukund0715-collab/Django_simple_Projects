@@ -1,0 +1,135 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Layout Container */
+    .register-container {
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 0;
+    }
+
+    .register-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        max-width: 1000px; /* Slightly wider than login for the extra fields */
+        width: 100%;
+    }
+
+    /* 2. Left Side: Inspirational Image */
+    .register-image-col {
+        background: url('https://images.unsplash.com/photo-1567129937968-cdad8f07e2f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+        background-size: cover;
+        background-position: center;
+        min-height: 500px;
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3));
+        display: flex;
+        align-items: flex-end;
+        padding: 40px;
+        color: white;
+    }
+
+    /* 3. Right Side: The Form */
+    .register-form-col {
+        padding: 50px 40px;
+    }
+</style>
+
+<div class="register-container">
+    <div class="card register-card" data-aos="fade-up" data-aos-duration="800">
+        <div class="row g-0">
+            
+            <div class="col-lg-5 d-none d-lg-block register-image-col">
+                <div class="overlay">
+                    <div>
+                        <h2 class="fw-bold display-6 mb-3">Grow Your Business</h2>
+                        <p class="lead mb-4 opacity-75">Join the city's smartest network of food vendors.</p>
+                        
+                        <ul class="list-unstyled text-white-50">
+                            <li class="mb-2"><i class="fas fa-check-circle text-warning me-2"></i> Real-time GPS Tracking</li>
+                            <li class="mb-2"><i class="fas fa-check-circle text-warning me-2"></i> Digital Menu & Inventory</li>
+                            <li><i class="fas fa-check-circle text-warning me-2"></i> Party Mode Orders</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 register-form-col">
+                <div class="text-center mb-4">
+                    <span class="text-uppercase fw-bold text-warning small letter-spacing-1">New Vendor</span>
+                    <h2 class="fw-bold mt-2">Launch Your Cart 🚀</h2>
+                    <p class="text-muted small">Get your digital storefront online in seconds.</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small text-muted mb-1">Username</label>
+                            {{ form.username }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="fw-bold small text-muted mb-1">Cart Name</label>
+                            {{ form.cart_name }}
+                            <div class="form-text small">e.g., "Spicy Momos Express"</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold small text-muted mb-1">Password</label>
+                        {{ form.password }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="fw-bold small text-muted mb-1">Confirm Password</label>
+                        {{ form.confirm_password }}
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold shadow-lg transition-hover">
+                        Start My Business <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 pt-3 border-top">
+                    <p class="small text-muted">
+                        Already have an account? 
+                        <a href="{% url 'login' %}" class="fw-bold text-dark text-decoration-none">
+                            Login here
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    // Auto-style Django Inputs
+    document.querySelectorAll('input').forEach(field => {
+        field.classList.add('form-control');
+        field.classList.add('form-control-lg'); 
+        field.style.borderRadius = "10px";
+        field.style.padding = "10px 15px";
+        field.style.border = "1px solid #dee2e6";
+        field.style.backgroundColor = "#f8f9fa";
+        field.style.fontSize = "1rem";
+    });
+</script>
+{% endblock %}

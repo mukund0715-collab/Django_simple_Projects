@@ -1,0 +1,121 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Center the Card Vertically */
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* 2. The Split Card */
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        max-width: 900px;
+        width: 100%;
+    }
+
+    /* 3. The Image Side (Left) */
+    .login-image-col {
+        background: url('https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');
+        background-size: cover;
+        background-position: center;
+        min-height: 400px;
+        position: relative;
+    }
+    
+    .overlay {
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+        display: flex;
+        align-items: flex-end;
+        padding: 40px;
+        color: white;
+    }
+
+    /* 4. The Form Side (Right) */
+    .login-form-col {
+        padding: 50px 40px;
+    }
+    
+    .brand-text {
+        color: #ff5722;
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="login-container">
+    <div class="card login-card" data-aos="zoom-in" data-aos-duration="800">
+        <div class="row g-0">
+            
+            <div class="col-md-6 d-none d-md-block login-image-col">
+                <div class="overlay">
+                    <div>
+                        <h3 class="fw-bold mb-1">Welcome Back!</h3>
+                        <p class="mb-0 opacity-75">Manage your cart, update your menu, and track your customers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 login-form-col">
+                <div class="text-center mb-4">
+                    <span class="brand-text text-uppercase small">FoodCart Vendor</span>
+                    <h2 class="fw-bold mt-2">Login to Dashboard</h2>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold small text-muted mb-1">Username</label>
+                        {{ form.username }}
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="fw-bold small text-muted mb-1">Password</label>
+                        {{ form.password }}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-bold shadow-sm" style="background-color: #ff5722; border: none;">
+                        Login <i class="fas fa-arrow-right ms-2"></i>
+                    </button>
+                </form>
+
+                <div class="text-center mt-4">
+                    <p class="small text-muted">
+                        New to FoodCart? 
+                        <a href="{% url 'vendor_register' %}" class="fw-bold text-decoration-none" style="color: #ff5722;">
+                            Register your Cart
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    // Auto-style the Django form inputs
+    document.querySelectorAll('input').forEach(field => {
+        field.classList.add('form-control');
+        field.classList.add('form-control-lg'); // Make them bigger/easier to type
+        field.style.borderRadius = "10px";
+        field.style.padding = "12px 15px";
+        field.style.border = "1px solid #dee2e6";
+        field.style.backgroundColor = "#f8f9fa";
+    });
+</script>
+{% endblock %}
