@@ -1,0 +1,273 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Hero Banner Styling */
+    .cart-header {
+        position: relative;
+        height: 300px;
+        border-radius: 0 0 25px 25px; /* Round bottom corners only */
+        overflow: hidden;
+        margin-top: -24px; /* Touch navbar */
+        margin-bottom: 30px;
+        color: white;
+    }
+    
+    .cart-bg {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: brightness(0.6); /* Darken image so text pops */
+        transition: transform 1s ease;
+    }
+    
+    .cart-header:hover .cart-bg {
+        transform: scale(1.05); /* Subtle zoom on hover */
+    }
+
+    .header-content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 40px;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    }
+
+    /* 2. Menu Item Styling */
+    .menu-card {
+        border: none;
+        border-radius: 15px;
+        transition: all 0.6s ease;
+        background: white;
+        overflow: hidden;
+    }
+    
+    .menu-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.08) !important;
+    }
+    
+    .item-img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 12px;
+    }
+
+    /* 3. Party Mode Box */
+    .party-box {
+        background: linear-gradient(135deg, #ff9800, #ff5722);
+        color: white;
+        border-radius: 15px;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .party-box::after {
+        content: '\f0c0'; /* FontAwesome Users Icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: -20px;
+        bottom: -20px;
+        font-size: 8rem;
+        opacity: 0.1;
+        transform: rotate(-15deg);
+    }
+</style>
+
+{% if messages %}
+<div class="container mt-3" style="position: relative; z-index: 1000;">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm" role="alert">
+        <i class="fas fa-check-circle me-2"></i> <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="cart-header shadow-sm">
+    {% if cart.image %}
+        <img src="{{ cart.image.url }}" class="cart-bg">
+    {% else %}
+        <img src="https://placehold.co/1200x400?text=FoodCart" class="cart-bg">
+    {% endif %}
+    
+    <div class="header-content d-flex justify-content-between align-items-end">
+        <div>
+            <span class="badge bg-warning text-dark mb-2"><i class="fas fa-star"></i> 4.8 Rating</span>
+            <h1 class="display-5 fw-bold mb-1">{{ cart.name }}</h1>
+            <p class="lead mb-0 opacity-75">
+                <i class="far fa-clock me-2"></i> Open: {{ cart.opening_time|time:"g:i A" }} - {{ cart.closing_time|time:"g:i A" }}
+            </p>
+        </div>
+        
+        <button class="btn btn-outline-light rounded-pill px-4" type="button" data-bs-toggle="collapse" data-bs-target="#scheduleCollapse">
+            <i class="fas fa-calendar-alt me-2"></i> View Route
+        </button>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <div class="collapse mb-4" id="scheduleCollapse">
+        <div class="card card-body bg-light border-0 rounded-4 shadow-sm">
+            <h5 class="fw-bold mb-3">📅 Weekly Route Schedule</h5>
+            <div class="table-responsive">
+                <table class="table table-borderless mb-0">
+                    <thead class="text-muted"><tr><th>Day</th><th>Location</th><th>Time</th></tr></thead>
+                    <tbody>
+                        {% for sched in cart.schedule.all %}
+                        <tr>
+                            <td class="fw-bold text-primary">{{ sched.get_day_of_week_display }}</td>
+                            <td>{{ sched.location_name }}</td>
+                            <td>{{ sched.start_time|time:"g:i A" }} - {{ sched.end_time|time:"g:i A" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-muted">No fixed route. Check the live map!</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-5" data-aos="fade-up">
+    <div class="col-12">
+        <div class="party-box shadow">
+            <div class="d-flex align-items-center justify-content-between position-relative" style="z-index: 2;">
+                <div>
+                    <h3 class="fw-bold m-0">Eating with friends?</h3>
+                    <p class="m-0 opacity-90">Create a group lobby and order together on one bill.</p>
+                </div>
+                
+                <a href="{% url 'start_party' cart.id %}" class="btn btn-light text-warning fw-bold px-4 rounded-pill shadow-sm">
+                    <i class="fas fa-users me-2"></i> Start Group Order
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <h3 class="fw-bold mb-4 border-start border-4 border-warning ps-3">Full Menu</h3>
+    
+    <div class="row g-4">
+        {% for item in items %}
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter }}00">
+            <div class="card menu-card h-100 p-3 shadow-sm">
+                <div class="d-flex align-items-center">
+                    
+                    <div class="flex-shrink-0">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" class="item-img shadow-sm">
+                        {% else %}
+                            <img src="https://placehold.co/150x150?text=Food" class="item-img shadow-sm">
+                        {% endif %}
+                    </div>
+
+                    <div class="flex-grow-1 ms-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <h5 class="fw-bold mb-1">{{ item.name }}</h5>
+                            <h5 class="text-primary fw-bold">₹{{ item.price }}</h5>
+                        </div>
+                        
+                        <div class="mb-2">
+                            {% if item.stock_qty == 0 %}
+                                <span class="badge bg-light text-muted border">Sold Out</span>
+                            {% elif item.stock_qty < 5 %}
+                                <span class="badge bg-danger-subtle text-danger border border-danger">
+                                    🔥 Only {{ item.stock_qty }} left!
+                                </span>
+                            {% else %}
+                                <span class="badge bg-success-subtle text-success border border-success">
+                                    In Stock
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        <form action="{% url 'order_item' item.id %}" method="POST">
+                            {% csrf_token %}
+                            {% if item.stock_qty > 0 %}
+                                <button type="submit" class="btn btn-dark btn-sm rounded-pill w-100">
+                                    Add to Order <i class="fas fa-plus ms-1"></i>
+                                </button>
+                            {% else %}
+                                <button type="button" class="btn btn-secondary btn-sm rounded-pill w-100" disabled>
+                                    Unavailable
+                                </button>
+                            {% endif %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted">Menu items are currently unavailable.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({ once: true });
+</script>
+
+{% if my_total > 0 %}
+<div class="fixed-bottom p-3" style="z-index: 1000; pointer-events: none;">
+    <div class="container d-flex justify-content-end">
+        <button class="btn btn-dark rounded-pill shadow-lg px-4 py-3 animate__animated animate__bounceInUp" 
+                style="pointer-events: auto; border: 2px solid #ffc107;"
+                data-bs-toggle="modal" data-bs-target="#individualPaymentModal">
+            <div class="d-flex align-items-center">
+                <div class="text-start me-3">
+                    <small class="d-block text-warning" style="font-size: 0.7rem;">MY BILL</small>
+                    <span class="h5 fw-bold mb-0 text-white">₹{{ my_total }}</span>
+                </div>
+                <i class="fas fa-qrcode fa-2x text-white"></i>
+            </div>
+        </button>
+    </div>
+</div>
+{% endif %}
+
+<div class="modal fade" id="individualPaymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title"><i class="fas fa-wallet me-2"></i>Pay Your Bill</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <h2 class="display-4 fw-bold mb-1">₹{{ my_total }}</h2>
+                <p class="text-muted mb-4">Total amount to pay</p>
+                
+                <div class="card p-2 d-inline-block shadow-sm mb-3">
+                    {% if cart.payment_qr %}
+                        <img src="{{ cart.payment_qr.url }}" class="img-fluid" style="max-width: 200px;">
+                    {% else %}
+                        <div class="p-4 bg-light text-muted">
+                            <i class="fas fa-qrcode fa-3x mb-2"></i><br>
+                            No QR Code Uploaded
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <p class="small text-muted">Scan with any UPI App (GPay, PhonePe, Paytm)</p>
+            </div>
+            <div class="modal-footer p-2">
+                <a href="{% url 'pay_individual_bill' cart.id %}" class="btn btn-success w-100 py-3 fw-bold rounded-3">
+                    <i class="fas fa-check-circle me-2"></i> I Have Paid
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

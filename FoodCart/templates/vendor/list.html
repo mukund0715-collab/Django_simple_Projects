@@ -1,0 +1,154 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Header Styling */
+    .discovery-header {
+        background: linear-gradient(135deg, #212529, #343a40);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    /* 2. Card Hover Effects */
+    .food-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.6s ease;
+        background: white;
+    }
+    
+    .food-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    }
+
+    /* Image Zoom */
+    .img-wrapper {
+        height: 220px;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .food-card img {
+        transition: transform 1s ease;
+    }
+    
+    .food-card:hover img {
+        transform: scale(1.1); /* Zoom in effect */
+    }
+
+    /* 3. Status Badges */
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 6px 14px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        z-index: 2;
+        backdrop-filter: blur(5px);
+    }
+</style>
+
+<div class="discovery-header shadow-sm text-center" data-aos="fade-down">
+    <h1 class="fw-bold mb-2">Find Your Craving</h1>
+    <p class="text-white-50 mb-4">Discover the best local food carts near you</p>
+    
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text bg-white border-0 text-muted"><i class="fas fa-search"></i></span>
+                <input type="text" class="form-control border-0" placeholder="Search for burger, dosa, or pizza...">
+                <button class="btn btn-brand px-4">Search</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    {% for cart in carts %}
+    <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+        
+        <div class="card h-100 food-card shadow-sm {% if not cart.is_open_now %}bg-light{% endif %}"
+             style="{% if not cart.is_open_now %}filter: grayscale(1); opacity: 0.9;{% endif %}">
+            
+            <div class="img-wrapper">
+                {% if cart.is_open_now %}
+                    <span class="status-badge bg-success text-white shadow">
+                        <i class="fas fa-door-open me-1"></i> Open Now
+                    </span>
+                {% else %}
+                    <span class="status-badge bg-secondary text-white shadow">
+                        <i class="fas fa-door-closed me-1"></i> Closed
+                    </span>
+                    <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-center" 
+                         style="background: rgba(0,0,0,0.1); z-index: 1;">
+                    </div>
+                {% endif %}
+
+                {% if cart.image %}
+                    <img src="{{ cart.image.url }}" class="w-100 h-100 object-fit-cover" alt="{{ cart.name }}">
+                {% else %}
+                    <img src="https://placehold.co/600x400?text=FoodCart" class="w-100 h-100 object-fit-cover">
+                {% endif %}
+            </div>
+
+            <div class="card-body d-flex flex-column p-4">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h4 class="card-title fw-bold mb-0 text-dark">{{ cart.name }}</h4>
+                    <span class="badge bg-light text-warning border">
+                        <i class="fas fa-star"></i> 4.5
+                    </span>
+                </div>
+                
+                <p class="card-text text-muted small mb-3 text-truncate">
+                    {{ cart.description|default:"Delicious street food served fresh daily." }}
+                </p>
+                
+                <div class="mt-auto">
+                    <hr class="opacity-10 my-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3 text-secondary small">
+                        <span><i class="far fa-clock me-1"></i> {{ cart.opening_time|time:"g:i A" }} - {{ cart.closing_time|time:"g:i A" }}</span>
+                        <span><i class="fas fa-map-marker-alt me-1"></i> ~0.5 km</span>
+                    </div>
+
+                    {% if cart.is_open_now %}
+                        <a href="{% url 'menu_view' cart.id %}" class="btn btn-brand w-100 shadow-sm py-2">
+                            View Menu & Order
+                        </a>
+                    {% else %}
+                        <a href="{% url 'menu_view' cart.id %}" class="btn btn-outline-secondary w-100 py-2">
+                            View Menu (Closed)
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <div class="py-5" data-aos="zoom-in">
+            <i class="fas fa-store-slash fa-4x text-muted mb-3"></i>
+            <h3 class="text-muted">No active carts found.</h3>
+            <p class="text-muted">It seems everyone is taking a break. Check back later!</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+      once: true,
+      duration: 800,
+  });
+</script>
+{% endblock %}

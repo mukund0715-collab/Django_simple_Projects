@@ -1,0 +1,157 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+<style>
+    /* Custom Hero Styling */
+    .hero-wrap {
+        background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed; /* Parallax Effect */
+        color: white;
+        padding: 150px 0;
+        border-radius: 15px;
+        margin-bottom: 50px;
+    }
+    
+    .feature-icon-box {
+        width: 80px;
+        height: 80px;
+        background: rgba(255, 87, 34, 0.1);
+        color: #ff5722;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 20px;
+        transition: transform 0.9s;
+    }
+    
+    .feature-card:hover .feature-icon-box {
+        transform: scale(1.1) rotate(5deg);
+        background: #ff5722;
+        color: white;
+    }
+
+    .step-number {
+        font-size: 4rem;
+        font-weight: 800;
+        color: #e9ecef;
+        line-height: 1;
+        position: absolute;
+        top: -20px;
+        left: 20px;
+        z-index: -1;
+    }
+</style>
+
+<div class="hero-wrap text-center shadow-lg" data-aos="fade-in" data-aos-duration="1500">
+    <div class="container">
+        <h1 class="display-3 fw-bold mb-3">Street Food, <span style="color: #ff5722;">Smart Way.</span></h1>
+        <p class="lead mb-5" style="max-width: 600px; margin: 0 auto; opacity: 0.9;">
+            Track your favorite food carts in real-time, pre-order to skip the line, and split the bill with friends.
+        </p>
+        
+        <div class="d-flex justify-content-center gap-3">
+            <a class="btn btn-brand btn-lg px-5 py-3 shadow" href="{% url 'map_view' %}">
+                <i class="fas fa-map-location-dot me-2"></i> Find Food Now
+            </a>
+            <a class="btn btn-outline-light btn-lg px-5 py-3" href="{% url 'vendor_list' %}">
+                <i class="fas fa-list me-2"></i> View Menu
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <div class="text-center mb-5" data-aos="fade-up">
+        <h2 class="fw-bold">Why use FoodCart?</h2>
+        <p class="text-muted">More than just a menu app.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4" data-aos="fade-right" data-aos-delay="100">
+            <div class="card h-100 p-4 text-center feature-card shadow-sm">
+                <div class="feature-icon-box">
+                    <i class="fas fa-satellite-dish"></i>
+                </div>
+                <h4>Live GPS Tracking</h4>
+                <p class="text-muted">Never guess where the cart is. See them moving in real-time on our live map.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="card h-100 p-4 text-center feature-card shadow-sm">
+                <div class="feature-icon-box">
+                    <i class="fas fa-stopwatch"></i>
+                </div>
+                <h4>Smart Inventory</h4>
+                <p class="text-muted">Know before you go. We show you exactly how many items are left in stock.</p>
+            </div>
+        </div>
+
+        <div class="col-md-4" data-aos="fade-left" data-aos-delay="300">
+            <div class="card h-100 p-4 text-center feature-card shadow-sm">
+                <div class="feature-icon-box">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h4>Party Mode</h4>
+                <p class="text-muted">Ordering with friends? Create a shared lobby and add items to a single bill.</p>
+                <a href="{% url 'vendor_list' %}" class="btn btn-sm btn-outline-dark mt-2">Find a Cart &rarr;</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container py-5">
+    <hr class="my-5 opacity-25">
+    
+    <div class="row align-items-center mb-5">
+        <div class="col-md-6" data-aos="fade-right">
+            <img src="https://images.unsplash.com/photo-1567129937968-cdad8f07e2f8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                 class="img-fluid rounded-4 shadow" alt="Tasty Burger">
+        </div>
+        <div class="col-md-6 ps-md-5" data-aos="fade-left">
+            <h3 class="fw-bold mb-3">Freshness You Can Trust</h3>
+            <p class="text-muted">We verify every vendor on our platform. Check opening times, view high-quality photos of the food, and see exactly what you are getting before you walk out the door.</p>
+            <ul class="list-unstyled mt-3">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Verified Hygiene</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Real-time Availability</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Direct Vendor Contact</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row align-items-center flex-md-row-reverse">
+        <div class="col-md-6" data-aos="fade-left">
+            <img src="https://images.unsplash.com/photo-1556761175-4b46a572b786?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" 
+                 class="img-fluid rounded-4 shadow" alt="Route Map">
+        </div>
+        <div class="col-md-6 pe-md-5" data-aos="fade-right">
+            <h3 class="fw-bold mb-3">Plan Your Week</h3>
+            <p class="text-muted">Food carts move, but that doesn't mean you have to miss them. Check the <strong>Weekly Route Schedule</strong> to see where your favorite truck will be tomorrow.</p>
+            <a href="{% url 'vendor_list' %}" class="btn btn-primary mt-3">Check Schedules</a>
+        </div>
+    </div>
+</div>
+
+<div class="bg-dark text-white rounded-4 p-5 text-center mt-5 mb-5 shadow" 
+     style="background-image: url('https://www.transparenttextures.com/patterns/food.png');"
+     data-aos="zoom-in">
+    <h2 class="fw-bold mb-3">Are you a Food Vendor?</h2>
+    <p class="lead opacity-75 mb-4">Join thousands of vendors using FoodCart to manage their business.</p>
+    <a href="{% url 'vendor_register' %}" class="btn btn-warning btn-lg fw-bold px-5">Register Your Cart</a>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+  AOS.init({
+      once: true, // Animation happens only once
+      offset: 100, // Trigger point
+      duration: 800, // Animation speed
+  });
+</script>
+
+{% endblock %}

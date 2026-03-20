@@ -1,0 +1,214 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+<style>
+    /* 1. Full Screen Map Setup */
+    /* Remove default container padding for this page only to make it full width */
+    .container {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    #map-container {
+        position: relative;
+        height: calc(100vh - 76px); /* Subtract approximate navbar height */
+        width: 100%;
+        margin-top: -24px; /* Pull it up to touch navbar if needed */
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+    }
+
+    /* 2. Floating Info Card (Glassmorphism) */
+    .floating-panel {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        z-index: 1000; /* Above the map */
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        padding: 15px 25px;
+        border-radius: 15px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        max-width: 300px;
+        transition: transform 0.6s ease;
+    }
+    
+    .floating-panel:hover {
+        transform: translateY(-2px);
+    }
+
+    /* 3. Pulsing User Marker Animation */
+    .user-pulse {
+        background: #0d6efd;
+        border-radius: 50%;
+        height: 14px;
+        width: 14px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        margin: -7px 0 0 -7px;
+        box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        animation: pulse-blue 2s infinite;
+    }
+
+    @keyframes pulse-blue {
+        0% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0.7);
+        }
+        70% {
+            transform: scale(1);
+            box-shadow: 0 0 0 10px rgba(13, 110, 253, 0);
+        }
+        100% {
+            transform: scale(0.95);
+            box-shadow: 0 0 0 0 rgba(13, 110, 253, 0);
+        }
+    }
+    
+    /* 4. Custom Popup Styling */
+    .leaflet-popup-content-wrapper {
+        border-radius: 12px;
+        padding: 0;
+        overflow: hidden;
+    }
+    .leaflet-popup-content {
+        margin: 0;
+        width: 200px !important;
+    }
+</style>
+
+<div id="map-container">
+    
+    <div class="floating-panel">
+        <h5 class="fw-bold mb-1"><i class="fas fa-satellite-dish text-danger me-2"></i>Live Tracker</h5>
+        <p class="text-muted small mb-2">Tracking active food carts near you.</p>
+        
+        <div class="d-flex align-items-center justify-content-between mt-3">
+            <div>
+                <small class="text-uppercase fw-bold text-muted" style="font-size: 0.7rem;">Active Carts</small>
+                <h3 class="fw-bold m-0" id="cart-count">0</h3>
+            </div>
+            <div class="text-end">
+                <button onclick="locateUser()" class="btn btn-sm btn-primary rounded-circle shadow" style="width: 40px; height: 40px;">
+                    <i class="fas fa-crosshairs"></i>
+                </button>
+            </div>
+        </div>
+        <small id="status-text" class="d-block mt-2 text-success"><i class="fas fa-circle fa-xs me-1"></i> System Online</small>
+    </div>
+
+    <div id="map"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    // 1. Initialize Map with "CartoDB Voyager" Tiles (Much cleaner than OpenStreetMap)
+    var map = L.map('map', { zoomControl: false }).setView([12.9716, 77.5946], 13);
+    
+    // Move zoom control to bottom right
+    L.control.zoom({ position: 'bottomright' }).addTo(map);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);
+
+    var userMarker = null;
+    var markers = {};
+
+    // 2. Beautiful User Location Marker (with Pulse)
+    function locateUser() {
+        if (navigator.geolocation) {
+            document.getElementById('status-text').innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Locating you...';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const lat = position.coords.latitude;
+                    const long = position.coords.longitude;
+
+                    // Create custom pulsing icon
+                    var pulseIcon = L.divIcon({
+                        className: 'user-pulse-marker',
+                        html: '<div class="user-pulse"></div>',
+                        iconSize: [20, 20]
+                    });
+
+                    if (userMarker) {
+                        userMarker.setLatLng([lat, long]);
+                    } else {
+                        userMarker = L.marker([lat, long], { icon: pulseIcon }).addTo(map);
+                        userMarker.bindPopup("<b>You are here</b>");
+                    }
+
+                    map.flyTo([lat, long], 16, { animate: true, duration: 1.5 });
+                    document.getElementById('status-text').innerHTML = '<i class="fas fa-check-circle me-1"></i> GPS Connected';
+                },
+                (error) => {
+                    console.warn("GPS Error:", error);
+                    document.getElementById('status-text').innerHTML = '<span class="text-danger">GPS Access Denied</span>';
+                }
+            );
+        }
+    }
+
+    // 3. Fetch Cart Locations
+    function updateLocations() {
+        fetch("{% url 'get_cart_location' %}")
+            .then(response => response.json())
+            .then(data => {
+                var carts = data.carts;
+                document.getElementById('cart-count').innerText = carts.length;
+
+                carts.forEach(cart => {
+                    if (markers[cart.id]) {
+                        // Smoothly move marker
+                        markers[cart.id].setLatLng([cart.lat, cart.long]);
+                    } else {
+                        // Create Marker
+                        var newMarker = L.marker([cart.lat, cart.long]).addTo(map);
+                        
+                        // Fallback Image
+                        var imgUrl = cart.image_url ? cart.image_url : "https://placehold.co/100x60?text=No+Image";
+
+                        // Beautiful Popup Card
+                        var popupContent = `
+                            <div style="width: 200px;">
+                                <div style="height: 100px; overflow: hidden;">
+                                    <img src="${imgUrl}" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div style="padding: 10px;">
+                                    <h6 style="margin: 0; font-weight: bold; font-size: 16px;">${cart.name}</h6>
+                                    <p style="margin: 0; font-size: 12px; color: #6c757d;">Last seen: Just now</p>
+                                    <a href="${cart.url}" 
+                                       style="display: block; margin-top: 8px; background: #ff5722; color: white; text-align: center; padding: 6px; border-radius: 4px; text-decoration: none; font-size: 13px; font-weight: 600;">
+                                       View Menu
+                                    </a>
+                                </div>
+                            </div>
+                        `;
+
+                        newMarker.bindPopup(popupContent);
+                        markers[cart.id] = newMarker;
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching locations:', error));
+    }
+
+    // Initialize
+    locateUser(); // Try to find user on load
+    updateLocations();
+    setInterval(updateLocations, 5000); // Poll every 5 seconds
+</script>
+{% endblock %}

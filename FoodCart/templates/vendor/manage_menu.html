@@ -1,0 +1,185 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Header Styling */
+    .menu-header {
+        background: linear-gradient(135deg, #198754, #20c997); /* Green Gradient for "Growth/Money" */
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(25, 135, 84, 0.2);
+    }
+
+    /* 2. Item Card Styling */
+    .item-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        transition: transform 0.4s;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+    
+    .item-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .item-thumb {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    /* 3. Sticky Add Form */
+    .sticky-form {
+        position: sticky;
+        top: 100px; /* Sticks 100px from top */
+        z-index: 10;
+    }
+    
+    .add-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-top: 5px solid #198754;
+    }
+</style>
+
+<div class="container">
+    
+    <div class="menu-header d-flex justify-content-between align-items-center" data-aos="fade-down">
+        <div>
+            <h2 class="fw-bold mb-1"><i class="fas fa-hamburger me-2"></i>Manage Menu</h2>
+            <p class="mb-0 opacity-75">Update prices, stock, and photos for <strong>{{ cart.name }}</strong></p>
+        </div>
+        <div class="d-none d-md-block">
+            <i class="fas fa-edit fa-3x opacity-25"></i>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <h5 class="fw-bold text-secondary mb-3">Current Items ({{ items.count }})</h5>
+            
+            <div class="d-flex flex-column gap-3">
+                {% for item in items %}
+                <div class="item-card p-3" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" class="item-thumb shadow-sm">
+                            {% else %}
+                                <div class="item-thumb bg-light d-flex align-items-center justify-content-center text-muted border">
+                                    <i class="fas fa-camera"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-grow-1 ms-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h5 class="fw-bold mb-1">{{ item.name }}</h5>
+                                <span class="badge bg-light text-dark border">₹{{ item.price }}</span>
+                            </div>
+                            
+                            <div class="mt-1">
+                                <small class="text-muted fw-bold text-uppercase" style="font-size: 0.7rem;">Stock Level:</small>
+                                {% if item.stock_qty == 0 %}
+                                    <span class="badge bg-danger">Sold Out (0)</span>
+                                {% elif item.stock_qty < 10 %}
+                                    <span class="badge bg-warning text-dark">Low ({{ item.stock_qty }})</span>
+                                {% else %}
+                                    <span class="badge bg-success">Good ({{ item.stock_qty }})</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="ms-3 d-flex gap-2">
+                            <a href="{% url 'edit_menu_item' item.id %}" 
+                            class="btn btn-outline-primary btn-sm rounded-circle d-flex align-items-center justify-content-center" 
+                            style="width: 35px; height: 35px;" 
+                            title="Edit Item">
+                                <i class="fas fa-pen"></i>
+                            </a>
+
+                            <a href="{% url 'delete_menu_item' item.id %}" 
+                            class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center" 
+                            style="width: 35px; height: 35px;" 
+                            title="Delete Item"
+                            onclick="return confirm('Are you sure you want to delete {{ item.name }}?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5 text-muted">
+                    <i class="fas fa-utensils fa-3x mb-3 opacity-25"></i>
+                    <p>Your menu is empty.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-form" data-aos="fade-left">
+                <div class="card add-card bg-white">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="fw-bold text-success"><i class="fas fa-plus-circle me-2"></i>Add New Item</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label class="fw-bold small text-muted">Item Name</label>
+                                {{ form.name }}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="fw-bold small text-muted">Price (₹)</label>
+                                    {{ form.price }}
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="fw-bold small text-muted">Stock Qty</label>
+                                    {{ form.stock_qty }}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="fw-bold small text-muted">Food Photo</label>
+                                {{ form.image }}
+                            </div>
+
+                            <button type="submit" class="btn btn-success w-100 py-2 rounded-pill shadow-sm fw-bold">
+                                Save Item
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    // Auto-style Django form widgets to look like Bootstrap
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        field.classList.add('form-control');
+        field.classList.add('bg-light'); // Subtle background
+        field.style.border = "none";     // Cleaner look
+        field.style.padding = "10px";    // More breathing room
+    });
+</script>
+{% endblock %}

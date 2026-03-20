@@ -1,0 +1,276 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<style>
+    /* 1. Custom Party Header (Purple/Blue Gradient) */
+    .party-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(118, 75, 162, 0.2);
+    }
+
+    /* 2. Glassmorphism Invite Box */
+    .invite-box {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px dashed rgba(255, 255, 255, 0.5);
+        padding: 15px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+    }
+
+    /* 3. Menu Item Cards */
+    .menu-item-card {
+        transition: transform 0.4s;
+        border: none;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+    
+    .menu-item-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    /* 4. Sticky Cart (The "Bill") */
+    .sticky-cart {
+        position: sticky;
+        top: 100px; /* Sticks 100px from top of screen */
+        z-index: 100;
+    }
+
+    .cart-receipt {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .cart-receipt-header {
+        background: #212529;
+        color: white;
+        padding: 15px 20px;
+    }
+
+    /* 5. Avatar Circle */
+    .user-avatar {
+        width: 24px;
+        height: 24px;
+        background: #ff5722;
+        color: white;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        margin-right: 8px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+    
+    /* 6. Visual Refresh Bar */
+    .refresh-bar {
+        height: 4px;
+        background: #e9ecef;
+        width: 100%;
+        margin-top: 10px;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    .refresh-fill {
+        height: 100%;
+        background: #28a745;
+        width: 100%;
+        transition: width 1s linear;
+    }
+</style>
+
+<div class="party-header" data-aos="fade-down">
+    <div class="row align-items-center">
+        <div class="col-md-7">
+            <span class="badge bg-warning text-dark mb-2 shadow-sm">
+                <i class="fas fa-crown me-1"></i> Party Mode Active
+            </span>
+            <h1 class="fw-bold mb-1">Let's Order Together!</h1>
+            <p class="mb-0 opacity-75">
+                Ordering as: <strong>{{ my_name }}</strong>
+            </p>
+        </div>
+        <div class="col-md-5 mt-3 mt-md-0">
+            <div class="invite-box">
+                <small class="text-uppercase fw-bold opacity-75 d-block mb-1" style="font-size: 0.7rem;">Invite Friends via Link</small>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control border-0 bg-white" value="{{ request.build_absolute_uri }}" readonly id="shareLink">
+                    <button class="btn btn-light fw-bold" onclick="copyLink()">
+                        <i class="fas fa-copy text-primary"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8 mb-5">
+        <h4 class="fw-bold mb-3 text-secondary border-bottom pb-2"><i class="fas fa-utensils me-2"></i>Select Items</h4>
+        
+        <div class="row g-3">
+            {% for item in items %}
+            <div class="col-md-6" data-aos="fade-up">
+                <div class="card menu-item-card h-100 p-2">
+                    <div class="d-flex align-items-center">
+                        <div style="width: 70px; height: 70px; flex-shrink: 0; border-radius: 10px; overflow: hidden;">
+                            {% if item.image %}
+                                <img src="{{ item.image.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% else %}
+                                <img src="https://placehold.co/100x100?text=Food" style="width: 100%; height: 100%; object-fit: cover;">
+                            {% endif %}
+                        </div>
+
+                        <div class="flex-grow-1 ms-3">
+                            <h6 class="fw-bold mb-1 text-truncate">{{ item.name }}</h6>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-primary fw-bold small">₹{{ item.price }}</span>
+                                <a href="{% url 'add_to_party' lobby.code item.id %}" class="btn btn-sm btn-outline-dark rounded-pill px-3 py-1 shadow-sm">
+                                    <i class="fas fa-plus small"></i> Add
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="sticky-cart" data-aos="fade-left">
+            <div class="card cart-receipt">
+                <div class="cart-receipt-header d-flex justify-content-between align-items-center">
+                    <h5 class="m-0 fs-6"><i class="fas fa-receipt me-2"></i>Group Bill</h5>
+                    <span class="badge bg-danger rounded-pill">{{ shared_items.count }} Items</span>
+                </div>
+                
+                <div class="card-body bg-white p-0" style="max-height: 500px; overflow-y: auto;">
+                    <ul class="list-group list-group-flush">
+                        {% for shared in shared_items %}
+                        <li class="list-group-item py-3 px-3 border-bottom-0 border-top">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1 fw-bold text-dark">{{ shared.item_name }}</h6>
+                                    <div class="d-flex align-items-center text-muted small">
+                                        <div class="user-avatar shadow-sm">
+                                            {{ shared.added_by|slice:":1" }}
+                                        </div>
+                                        <span>{{ shared.added_by }}</span>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <span class="d-block fw-bold text-dark">₹{{ shared.price }}</span>
+                                    <a href="{% url 'remove_from_party' lobby.code shared.id %}" 
+                                       class="text-danger small text-decoration-none mt-1 d-inline-block fw-bold"
+                                       onclick="return confirm('Remove {{ shared.item_name }}?');">
+                                        <i class="fas fa-times me-1"></i>Remove
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="text-center py-5 text-muted">
+                            <i class="fas fa-shopping-basket fa-3x mb-3 opacity-25"></i>
+                            <p class="mb-0">Lobby is empty.</p>
+                            <small>Start adding food!</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="card-footer bg-light p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-0">
+                        <span class="text-muted text-uppercase small fw-bold">Grand Total</span>
+                        <span class="h3 fw-bold text-primary m-0">₹{{ total_price }}</span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-dark w-100 mt-3 rounded-pill fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                    Pay Bill <i class="fas fa-qrcode ms-1"></i>
+                </button>
+            </div>
+            
+            <div class="mt-3 text-center">
+                <div class="d-flex justify-content-between small text-muted mb-1">
+                    <span><i class="fas fa-sync-alt fa-spin me-1"></i> Live Syncing</span>
+                </div>
+                <div class="refresh-bar">
+                    <div class="refresh-fill" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    // 1. Copy Link Function
+    function copyLink() {
+        var copyText = document.getElementById("shareLink");
+        copyText.select();
+        copyText.setSelectionRange(0, 99999); 
+        navigator.clipboard.writeText(copyText.value);
+        // Show temporary success state on button
+        alert("Link copied! Send it to your friends.");
+    }
+
+    // 2. Progress Bar Logic
+    var timeLeft = 10;
+    var totalTime = 10;
+    
+    setInterval(function(){
+        timeLeft--;
+        
+        // Calculate width percentage
+        var percentage = (timeLeft / totalTime) * 100;
+        document.getElementById('progressBar').style.width = percentage + "%";
+
+        if(timeLeft <= 0){
+            window.location.reload();
+        }
+    }, 1000);
+</script>
+
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i>Pay Bill</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center p-4">
+                <h3 class="fw-bold mb-1">Total: ₹{{ total_price }}</h3>
+                <p class="text-muted small mb-4">Scan to pay <strong>{{ cart.name }}</strong></p>
+                
+                {% if cart.payment_qr %}
+                    <img src="{{ cart.payment_qr.url }}" class="img-fluid rounded shadow-sm border p-2 mb-3" style="max-width: 250px;">
+                {% else %}
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i> Vendor hasn't uploaded a QR code yet. Please pay cash.
+                    </div>
+                {% endif %}
+                
+                <p class="small text-muted mb-0">Once paid, click confirm to clear the lobby.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="{% url 'pay_bill' lobby.code %}" class="btn btn-success btn-lg w-100 rounded-pill fw-bold">
+                    <i class="fas fa-check me-2"></i> I Have Paid
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,197 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+<link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+<style>
+    /* 1. Header Styling */
+    .schedule-header {
+        background: linear-gradient(135deg, #0dcaf0, #0d6efd); /* Travel Blue Gradient */
+        color: white;
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .schedule-header::after {
+        content: '\f3c5'; /* Map Marker Icon */
+        font-family: "Font Awesome 6 Free";
+        font-weight: 900;
+        position: absolute;
+        right: -10px;
+        bottom: -20px;
+        font-size: 8rem;
+        opacity: 0.15;
+        transform: rotate(-10deg);
+    }
+
+    /* 2. Schedule Card Styling */
+    .schedule-card {
+        background: white;
+        border: none;
+        border-radius: 12px;
+        transition: all 0.4s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        border-left: 5px solid #0d6efd; /* Blue accent line */
+    }
+    
+    .schedule-card:hover {
+        transform: translateX(5px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+    }
+
+    .day-badge {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #adb5bd;
+        font-weight: 700;
+    }
+
+    /* 3. Time Bubble */
+    .time-bubble {
+        background: #e7f1ff;
+        color: #0d6efd;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-block;
+    }
+
+    /* 4. Sticky Form */
+    .sticky-form {
+        position: sticky;
+        top: 100px;
+        z-index: 10;
+    }
+    
+    .add-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        border-top: 5px solid #0dcaf0;
+    }
+</style>
+
+<div class="container">
+    
+    <div class="schedule-header d-flex justify-content-between align-items-center" data-aos="fade-down">
+        <div style="z-index: 1;">
+            <h2 class="fw-bold mb-1"><i class="fas fa-route me-2"></i>Weekly Route Plan</h2>
+            <p class="mb-0 opacity-90">Where will <strong>{{ user.foodcart.name }}</strong> be this week?</p>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        
+        <div class="col-lg-8">
+            <h5 class="fw-bold text-secondary mb-3">Your Itinerary</h5>
+            
+            <div class="d-flex flex-column gap-3">
+                {% for schedule in schedules %}
+                <div class="schedule-card p-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0 }}00">
+                    <div class="d-flex justify-content-between align-items-center">
+                        
+                        <div>
+                            <div class="day-badge mb-1">
+                                <i class="far fa-calendar-alt me-1"></i> {{ schedule.get_day_of_week_display }}
+                            </div>
+                            <h4 class="fw-bold text-dark mb-2">{{ schedule.location_name }}</h4>
+                            <div class="time-bubble">
+                                <i class="far fa-clock me-1"></i> 
+                                {{ schedule.start_time|time:"g:i A" }} - {{ schedule.end_time|time:"g:i A" }}
+                            </div>
+                        </div>
+
+                        <div>
+                            <a href="{% url 'delete_schedule' schedule.id %}" 
+                               class="btn btn-outline-danger btn-sm rounded-circle d-flex align-items-center justify-content-center shadow-sm" 
+                               style="width: 40px; height: 40px;" 
+                               title="Remove Stop"
+                               onclick="return confirm('Remove this stop from your schedule?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <div class="mb-3">
+                        <span class="fa-stack fa-2x">
+                            <i class="fas fa-circle fa-stack-2x text-light"></i>
+                            <i class="fas fa-map-signs fa-stack-1x text-muted opacity-50"></i>
+                        </span>
+                    </div>
+                    <h5 class="text-muted">No routes planned yet.</h5>
+                    <p class="text-muted small">Add a location so customers can find you tomorrow!</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="sticky-form" data-aos="fade-left">
+                <div class="card add-card bg-white">
+                    <div class="card-header bg-white border-0 pt-4 pb-0">
+                        <h4 class="fw-bold text-info"><i class="fas fa-plus-circle me-2"></i>Add New Stop</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label class="fw-bold small text-muted">Day of Week</label>
+                                {{ form.day_of_week }}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="fw-bold small text-muted">Location Name</label>
+                                {{ form.location_name }}
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="fw-bold small text-muted">Start Time</label>
+                                    {{ form.start_time }}
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="fw-bold small text-muted">End Time</label>
+                                    {{ form.end_time }}
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-info text-white w-100 py-2 rounded-pill shadow-sm fw-bold mt-2">
+                                Add to Schedule
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init({ once: true });
+
+    // Auto-style Django form widgets
+    document.querySelectorAll('input, select').forEach(field => {
+        field.classList.add('form-control');
+        field.classList.add('bg-light'); 
+        field.style.border = "none";     
+        field.style.padding = "12px";    
+        field.style.borderRadius = "8px";
+    });
+    
+    // Specifically style the dropdown
+    document.querySelectorAll('select').forEach(field => {
+        field.classList.add('form-select');
+    });
+</script>
+{% endblock %}
